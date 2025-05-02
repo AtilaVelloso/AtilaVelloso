@@ -1,16 +1,36 @@
-## Hi there 👋
 
-<!--
-**AtilaVelloso/AtilaVelloso** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+# Catimba Like App
 
-Here are some ideas to get you started:
+Este aplicativo é inspirado no **Catimba**, onde jogadores podem competir em ligas privadas, registrar seus pontos semanais e ver o ranking da competição.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## Funcionalidades
+
+- Criação de ligas privadas.
+- Cadastro de jogadores.
+- Pontuação semanal dos jogadores.
+- Visualização do ranking da liga.
+- Histórico das rodadas e resultados.
+
+## Como Rodar o App
+
+1. Clone o repositório:
+   ```bash
+   git clone https://github.com/seu-usuario/catimba-like-app.git
+   cd catimba-like-app
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Execute o app:
+   ```bash
+   npm start
+   ```
+
+Acesse o app localmente em `http://localhost:3000`.
+
+## Licença
+
+MIT
