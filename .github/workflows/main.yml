@@ -1,0 +1,134 @@
+// Interface do app estilo CATIMBA: Cadastro de Ligas, Jogadores e Ranking Semanal
+
+import React, { useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+
+let playerId = 1;
+
+export default function CatimbaLikeApp() {
+  const [leagueName, setLeagueName] = useState('');
+  const [leagueCreated, setLeagueCreated] = useState(false);
+  const [players, setPlayers] = useState([]);
+  const [playerName, setPlayerName] = useState('');
+  const [playerNick, setPlayerNick] = useState('');
+  const [round, setRound] = useState(1);
+  const [roundPoints, setRoundPoints] = useState({});
+
+  const createLeague = () => {
+    if (!leagueName.trim()) return;
+    setLeagueCreated(true);
+  };
+
+  const addPlayer = () => {
+    if (!playerName.trim() || !playerNick.trim() || players.length >= 20) return;
+    setPlayers([
+      ...players,
+      {
+        id: playerId++,
+        name: playerName,
+        nick: playerNick,
+        points: 0,
+        history: [],
+      },
+    ]);
+    setPlayerName('');
+    setPlayerNick('');
+  };
+
+  const updateRoundPoints = (id, value) => {
+    setRoundPoints({
+      ...roundPoints,
+      [id]: Number(value),
+    });
+  };
+
+  const submitRound = () => {
+    const updatedPlayers = players.map((p) => {
+      const earned = roundPoints[p.id] || 0;
+      return {
+        ...p,
+        points: p.points + earned,
+        history: [...p.history, { round, earned }],
+      };
+    });
+    setPlayers(updatedPlayers);
+    setRound(round + 1);
+    setRoundPoints({});
+  };
+
+  const sortedPlayers = [...players].sort((a, b) => b.points - a.points);
+
+  return (
+    <div className="p-6 max-w-3xl mx-auto">
+      {!leagueCreated ? (
+        <Card className="mb-6">
+          <CardContent className="p-4 space-y-4">
+            <h2 className="text-xl font-bold">Criar Liga</h2>
+            <Input
+              placeholder="Nome da Liga"
+              value={leagueName}
+              onChange={(e) => setLeagueName(e.target.value)}
+            />
+            <Button onClick={createLeague}>Criar</Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <>
+          <h2 className="text-2xl font-bold mb-4">Liga: {leagueName}</h2>
+
+          <Card className="mb-6">
+            <CardContent className="p-4 space-y-4">
+              <h3 className="text-lg font-semibold">Cadastrar Jogador</h3>
+              <Input
+                placeholder="Nome"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+              />
+              <Input
+                placeholder="Apelido"
+                value={playerNick}
+                onChange={(e) => setPlayerNick(e.target.value)}
+              />
+              <Button onClick={addPlayer}>Adicionar Jogador</Button>
+            </CardContent>
+          </Card>
+
+          <h3 className="text-xl font-semibold mb-2">Jogadores Cadastrados</h3>
+          <div className="grid gap-2 mb-8">
+            {sortedPlayers.map((p, i) => (
+              <Card key={p.id}>
+                <CardContent className="p-3 flex justify-between">
+                  <span>
+                    #{i + 1} - {p.name} ({p.nick})
+                  </span>
+                  <span>{p.points} pts</span>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="mb-6">
+            <CardContent className="p-4 space-y-4">
+              <h3 className="text-lg font-semibold">Rodada {round}</h3>
+              {players.map((p) => (
+                <div key={p.id} className="flex gap-2 items-center">
+                  <span className="w-40">{p.nick}</span>
+                  <Input
+                    type="number"
+                    placeholder="Pontuação"
+                    value={roundPoints[p.id] || ''}
+                    onChange={(e) => updateRoundPoints(p.id, e.target.value)}
+                    className="w-32"
+                  />
+                </div>
+              ))}
+              <Button onClick={submitRound}>Salvar Rodada</Button>
+            </CardContent>
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}
